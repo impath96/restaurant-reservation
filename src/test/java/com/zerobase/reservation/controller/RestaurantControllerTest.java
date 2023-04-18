@@ -65,5 +65,16 @@ class RestaurantControllerTest {
 
     }
 
+    @Test
+    @DisplayName("매장 조회")
+    void getAllRestaurant() {
+
+        // given
+
+        // when
+
+        // then
+    }
+
 
 }
