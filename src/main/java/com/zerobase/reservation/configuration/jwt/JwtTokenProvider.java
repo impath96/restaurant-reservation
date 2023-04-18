@@ -39,4 +39,13 @@ public class JwtTokenProvider {
         return token;
     }
 
+    public String getEmail(String token) {
+
+        String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
+            .getSubject();
+
+        return email;
+    }
+
+
 }

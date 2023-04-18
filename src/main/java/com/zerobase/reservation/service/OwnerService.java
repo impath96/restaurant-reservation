@@ -7,6 +7,8 @@ import com.zerobase.reservation.dto.LogInForm;
 import com.zerobase.reservation.dto.OwnerCreateRequestDto;
 import com.zerobase.reservation.exception.DuplicatedEmailException;
 import com.zerobase.reservation.exception.LogInFailException;
+import com.zerobase.reservation.exception.OwnerAlreadyPartnerException;
+import com.zerobase.reservation.exception.UserNotFoundException;
 import com.zerobase.reservation.type.Role;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class OwnerService {
         // 이메일 중복 체크
         String email = ownerCreateRequestDto.getEmail();
 
-        if (ownerRepository.existsByEmail(email)) {
+        if (isExistsByEmail(email)) {
             throw new DuplicatedEmailException(email);
         }
 
@@ -52,5 +54,26 @@ public class OwnerService {
         return jwtTokenProvider.createToken(owner.getEmail(), owner.getId(),
             owner.getRole());
 
+    }
+
+    @Transactional
+    public Owner registerPartner(String token) {
+
+        // 먼저 해당 토큰 유효성 검사 - filter 또는 Interceptor 에서 구현!!
+        String email = jwtTokenProvider.getEmail(token);
+
+        Owner owner = ownerRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException(email));
+
+        // 이미 파트너 인 경우
+        if (owner.isPartner()) {
+            throw new OwnerAlreadyPartnerException();
+        }
+        owner.registerPartner();
+        return ownerRepository.save(owner);
+    }
+
+    public boolean isExistsByEmail(String email) {
+        return ownerRepository.existsByEmail(email);
     }
 }

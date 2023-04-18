@@ -44,4 +44,7 @@ public class Owner extends BaseEntity{
     private boolean isPartner;
 
 
+    public void registerPartner() {
+        this.isPartner = true;
+    }
 }
