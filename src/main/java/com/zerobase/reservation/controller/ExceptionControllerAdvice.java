@@ -1,6 +1,7 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.ErrorResponse;
+import com.zerobase.reservation.exception.DuplicatedEmailException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +14,12 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(RestaurantNotFoundException.class)
     public ErrorResponse handleRestaurantNotFound(RestaurantNotFoundException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicatedEmailException.class)
+    public ErrorResponse handleDuplicatedEmail(DuplicatedEmailException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
