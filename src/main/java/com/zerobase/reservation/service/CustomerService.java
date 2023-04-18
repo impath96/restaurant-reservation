@@ -1,10 +1,14 @@
 package com.zerobase.reservation.service;
 
+import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
 import com.zerobase.reservation.domain.entity.Customer;
 import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.dto.CustomerCreateRequestDto;
+import com.zerobase.reservation.dto.LogInForm;
 import com.zerobase.reservation.exception.DuplicatedEmailException;
+import com.zerobase.reservation.exception.LogInFailException;
 import com.zerobase.reservation.type.Role;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +17,9 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     public Customer signUp(CustomerCreateRequestDto customerCreateRequestDto) {
 
         // 이메일 중복 체크
@@ -32,6 +38,19 @@ public class CustomerService {
             .build();
 
         return customerRepository.save(customer);
+
+    }
+
+    @Transactional
+    public String logIn(LogInForm form) {
+
+        Customer customer = customerRepository.findByEmailAndPassword(
+                form.getEmail(),
+                form.getPassword())
+            .orElseThrow(() -> new LogInFailException());
+
+        return jwtTokenProvider.createToken(customer.getEmail(), customer.getId(),
+            customer.getRole());
 
     }
 }
