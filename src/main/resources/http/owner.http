@@ -2,14 +2,14 @@
 POST http://localhost:8080/owners/signup
 Content-Type: application/json
 
-{"email" : "owner@naver.com", "password" : "pass", "phoneNumber" : "010-1111-1111",
+{"email" : "owner1@naver.com", "password" : "pass", "phoneNumber" : "010-1111-1111",
   "name" : "민호"}
 
 ### 로그인
 POST http://localhost:8080/owners/login
 Content-Type: application/json
 
-{"email" : "owner@naver.com", "password" :  "pass"}
+{"email" : "owner1@naver.com", "password" :  "pass"}
 
 ### 파트너 가입
 PUT http://localhost:8080/owners/partner
