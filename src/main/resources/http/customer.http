@@ -1,0 +1,14 @@
+### 회원 가입
+POST http://localhost:8080/customer/signup
+Content-Type: application/json
+
+{"email" : "email@naver.com", "password" : "pass", "phoneNumber" : "010-1111-1111",
+ "name" : "민호"}
+
+### 로그인
+POST http://localhost:8080/customer/login
+Content-Type: application/json
+
+{"email" : "email@naver.com", "password" :  "pass"}
+
+

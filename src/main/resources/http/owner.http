@@ -1,0 +1,16 @@
+### 회원 가입
+POST http://localhost:8080/owners/signup
+Content-Type: application/json
+
+{"email" : "owner@naver.com", "password" : "pass", "phoneNumber" : "010-1111-1111",
+  "name" : "민호"}
+
+### 로그인
+POST http://localhost:8080/owners/login
+Content-Type: application/json
+
+{"email" : "owner@naver.com", "password" :  "pass"}
+
+### 파트너 가입
+PUT http://localhost:8080/owners/partner
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQWlJmcExLdEhzYjkwd1ZqaGRKV3h3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiT1dORVIiLCJpYXQiOjE2ODE4ODQ3MTcsImV4cCI6MTY4MTg4ODMxN30.kKjqYXW49bRzK9CeDRnFFBAaz9w-A_YawOsW7dxV6xI
