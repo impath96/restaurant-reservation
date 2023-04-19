@@ -1,5 +1,6 @@
 package com.zerobase.reservation.controller;
 
+import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
 import com.zerobase.reservation.dto.LogInForm;
 import com.zerobase.reservation.dto.OwnerCreateRequestDto;
 import com.zerobase.reservation.service.OwnerService;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OwnerController {
 
     private static final String AUTH_TOKEN = "X-AUTH-TOKEN";
-
+    private final JwtTokenProvider jwtTokenProvider;
     private final OwnerService ownerService;
 
     @PostMapping("/signup")
@@ -37,9 +38,7 @@ public class OwnerController {
 
     @PutMapping("/partner")
     public ResponseEntity<String> registerPartner(@RequestHeader(name = AUTH_TOKEN) String token) {
-
-        ownerService.registerPartner(token);
-
+        ownerService.registerPartner(jwtTokenProvider.getEmail(token));
         return ResponseEntity.ok("파트너 가입 완료");
     }
 }

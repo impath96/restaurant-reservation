@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +54,10 @@ public class Restaurant extends BaseEntity {
 
     @Column(name = "is_open")
     private boolean isOpen;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
 
 
 }

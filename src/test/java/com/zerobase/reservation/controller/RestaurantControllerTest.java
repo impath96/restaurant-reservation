@@ -42,7 +42,7 @@ class RestaurantControllerTest {
         String phoneNumber = "010-1111-1111";
         String address = "서울시 강남구";
 
-        given(restaurantService.addRestaurant(any()))
+        given(restaurantService.addRestaurant(any(), any()))
             .willReturn(
                 RestaurantCreateResponseDto.fromEntity(
                     Restaurant.builder()
@@ -61,7 +61,7 @@ class RestaurantControllerTest {
             .andExpect(jsonPath("$.description").value(description))
             .andDo(print());
 
-        verify(restaurantService).addRestaurant(any());
+        verify(restaurantService).addRestaurant(any(), any());
 
     }
 

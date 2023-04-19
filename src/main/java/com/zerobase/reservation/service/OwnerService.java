@@ -57,11 +57,9 @@ public class OwnerService {
     }
 
     @Transactional
-    public Owner registerPartner(String token) {
+    public Owner registerPartner(String email) {
 
         // 먼저 해당 토큰 유효성 검사 - filter 또는 Interceptor 에서 구현!!
-        String email = jwtTokenProvider.getEmail(token);
-
         Owner owner = ownerRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException(email));
 
@@ -73,7 +71,7 @@ public class OwnerService {
         return ownerRepository.save(owner);
     }
 
-    public boolean isExistsByEmail(String email) {
+    private boolean isExistsByEmail(String email) {
         return ownerRepository.existsByEmail(email);
     }
 }

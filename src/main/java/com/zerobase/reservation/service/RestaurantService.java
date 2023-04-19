@@ -1,12 +1,16 @@
 package com.zerobase.reservation.service;
 
+import com.zerobase.reservation.domain.entity.Owner;
 import com.zerobase.reservation.domain.entity.Restaurant;
+import com.zerobase.reservation.domain.repository.OwnerRepository;
 import com.zerobase.reservation.domain.repository.RestaurantRepository;
 import com.zerobase.reservation.dto.RestaurantCreateRequestDto;
 import com.zerobase.reservation.dto.RestaurantCreateResponseDto;
 import com.zerobase.reservation.dto.RestaurantDetailDto;
 import com.zerobase.reservation.dto.RestaurantDto;
+import com.zerobase.reservation.exception.OwnerNotPartnerException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
+import com.zerobase.reservation.exception.UserNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +21,19 @@ import org.springframework.stereotype.Service;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
-
+    private final OwnerRepository ownerRepository;
     // 매장 등록
-    public RestaurantCreateResponseDto addRestaurant(RestaurantCreateRequestDto requestDto) {
+    public RestaurantCreateResponseDto addRestaurant(
+        String  ownerEmail,
+        RestaurantCreateRequestDto requestDto) {
+
+        Owner owner = ownerRepository.findByEmail(ownerEmail)
+            .orElseThrow(() -> new UserNotFoundException(ownerEmail));
+
+        // 점장이 파트너 가입 되어 있는지 확인
+        if (!owner.isPartner()) {
+            throw new OwnerNotPartnerException();
+        }
 
         return RestaurantCreateResponseDto.fromEntity(
             restaurantRepository.save(
@@ -28,6 +42,7 @@ public class RestaurantService {
                     .address(requestDto.getAddress())
                     .description(requestDto.getDescription())
                     .phoneNumber(requestDto.getPhoneNumber())
+                    .owner(owner)
                     .build()
             )
         );

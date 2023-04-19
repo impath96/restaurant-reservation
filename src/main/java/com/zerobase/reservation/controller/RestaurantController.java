@@ -1,5 +1,6 @@
 package com.zerobase.reservation.controller;
 
+import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
 import com.zerobase.reservation.dto.RestaurantCreateRequestDto;
 import com.zerobase.reservation.dto.RestaurantCreateResponseDto;
 import com.zerobase.reservation.dto.RestaurantDetailDto;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
+    private static final String AUTH_TOKEN = "X-AUTH-TOKEN";
+
     private final RestaurantService restaurantService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 매장 등록
     @PostMapping
-    public RestaurantCreateResponseDto addRestaurant(RestaurantCreateRequestDto requestDto) {
-        return restaurantService.addRestaurant(requestDto);
+    public RestaurantCreateResponseDto addRestaurant(
+        @RequestHeader(name = AUTH_TOKEN) String token,
+        @RequestBody RestaurantCreateRequestDto requestDto
+    ) {
+        return restaurantService.addRestaurant(jwtTokenProvider.getEmail(token), requestDto);
     }
 
     // 정렬 조건(order : name(가나다순), rating(별점))
