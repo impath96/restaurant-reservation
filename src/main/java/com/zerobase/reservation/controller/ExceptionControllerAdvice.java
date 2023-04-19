@@ -3,6 +3,7 @@ package com.zerobase.reservation.controller;
 import com.zerobase.reservation.dto.ErrorResponse;
 import com.zerobase.reservation.exception.DuplicatedEmailException;
 import com.zerobase.reservation.exception.LogInFailException;
+import com.zerobase.reservation.exception.OwnerNotPartnerException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,14 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleLogInFail(LogInFailException exception) {
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(OwnerNotPartnerException.class)
+    public ErrorResponse handleOwnerNotPartner(OwnerNotPartnerException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+
 
 
 
