@@ -1,7 +1,7 @@
 ### 매장 등록
 POST http://localhost:8080/restaurants
 Content-Type: application/json
-X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODE4ODU5NTUsImV4cCI6MTY4MTg4OTU1NX0.eDlSY_k9Zb8DqJ2QHqiNmkSgmTLQ05EzzwfyxwJkNy4
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwSklUSlAxd0V1eE5IdWdKelVjWWF5cjBDTW9aNlJpaFNQaHdSMmY4UFhBPSIsImp0aSI6IkNtWUR2NU1LNVlVeWlrOEtHTkR3b3c9PSIsInJvbGUiOiJPV05FUiIsImlhdCI6MTY4MTg5MTY0MCwiZXhwIjoxNjgxODk1MjQwfQ.Vu30hwBZxZ8K_Y532hkyjpPnfuV0k_Y3a64M0l-wzQo
 
 {"name" : "매장1", "phoneNumber" : "010-1111-1234", "address" : "부산 사하구", "description" : "부산 매장1"}
 

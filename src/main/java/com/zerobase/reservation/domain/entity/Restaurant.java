@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "shops")
+@Table(name = "restaurants")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,10 +27,10 @@ public class Restaurant extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "shop_id")
+    @Column(name = "restaurant_id")
     private Long id;
 
-    @Column(name = "shop_name")
+    @Column(name = "restaurant_name")
     private String name;
 
     @Column(name = "phone_number")
