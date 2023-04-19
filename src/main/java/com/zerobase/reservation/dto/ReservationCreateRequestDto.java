@@ -12,8 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @AllArgsConstructor
 public class ReservationCreateRequestDto {
 
-    private Long restaurantId;
-
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime reservationTime;
 

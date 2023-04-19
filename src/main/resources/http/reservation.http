@@ -1,6 +1,6 @@
 ### 예약 하기
-POST http://localhost:8080/reservations
+POST http://localhost:8080/restaurants/1/reservations
 X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODE4OTIzMjMsImV4cCI6MTY4MTg5NTkyM30.yJzDbXwRJ-OiffahRwKnEkNccETFvT8nX_YGDfnxdSk
 Content-Type: application/json
 
-{"restaurantId" : 1, "reservationTime" : "2022-10-11T16:00:00"}
+{"reservationTime" : "2022-10-11T16:00:00"}

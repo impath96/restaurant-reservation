@@ -6,10 +6,10 @@ import com.zerobase.reservation.domain.entity.Restaurant;
 import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.domain.repository.ReservationRepository;
 import com.zerobase.reservation.domain.repository.RestaurantRepository;
-import com.zerobase.reservation.dto.ReservationCreateRequestDto;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import com.zerobase.reservation.type.ReservationStatus;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -25,20 +25,21 @@ public class ReservationService {
 
     private static final int CODE_LENGTH = 10;
 
+    // 예약 하기
     @Transactional
-    public Reservation makeReservation(String customerEmail, ReservationCreateRequestDto requestDto) {
+    public Reservation makeReservation(String customerEmail, Long restaurantId,
+        LocalDateTime reservationTime) {
 
         Customer customer = customerRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new UserNotFoundException(customerEmail));
 
-        Long restaurantId = requestDto.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
             .orElseThrow(() -> new RestaurantNotFoundException());
 
         Reservation reservation = Reservation.builder()
             .customer(customer)
             .restaurant(restaurant)
-            .reservationTime(requestDto.getReservationTime())
+            .reservationTime(reservationTime)
             .code(generateCode())
             .status(ReservationStatus.WAITING_APPROVAL)
             .customerName(customer.getName())
@@ -48,6 +49,7 @@ public class ReservationService {
 
     }
 
+    // 10자리 랜덤 문자(알파벳 + 숫자)
     private String generateCode() {
         return RandomStringUtils.randomAlphabetic(CODE_LENGTH);
     }
