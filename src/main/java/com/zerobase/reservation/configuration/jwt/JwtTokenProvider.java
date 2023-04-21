@@ -47,5 +47,12 @@ public class JwtTokenProvider {
         return Aes256Utils.decrypt(encryptedEmail);
     }
 
+    public Long getId(String token) {
+        String id = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getId();
+
+        return Long.parseLong(Aes256Utils.decrypt(id));
+    }
+
+
 
 }

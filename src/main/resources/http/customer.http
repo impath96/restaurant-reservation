@@ -12,3 +12,6 @@ Content-Type: application/json
 {"email" : "email@naver.com", "password" :  "pass"}
 
 
+### 내 에약 정보
+GET http://localhost:8080/customer/reservations
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODIwNTc3NDgsImV4cCI6MTY4MjA2MTM0OH0.uzHyg5oa5iHzyh7O7dSDe3Fmb47HjKSokrZAXyP4oAw

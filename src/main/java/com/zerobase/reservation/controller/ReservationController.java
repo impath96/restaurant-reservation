@@ -1,16 +1,23 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
+import com.zerobase.reservation.domain.entity.Reservation;
 import com.zerobase.reservation.dto.ReservationCreateRequestDto;
+import com.zerobase.reservation.dto.ReservationDto;
 import com.zerobase.reservation.service.ReservationService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ReservationController {
@@ -22,9 +29,11 @@ public class ReservationController {
 
     // customer - 내 예약 정보
     // customer - 예약 취소
-    // admin    - 예약 조회(모든 예약 조회, 특정 예약 상태 조회 등등)
-    // admin    - 예약 승인, 거절
+    // owner    - 예약 조회(모든 예약 조회, 특정 예약 상태 조회 등등)
+    // owner    - 예약 승인, 거절
 
+    // 예약 하기
+    // 고민할 부분 : 예약 시 회원 가입 유무를 Filter 활용해야 하나?
     @PostMapping("/restaurants/{restaurantId}/reservations")
     public ResponseEntity<String> makeReservation(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -39,6 +48,41 @@ public class ReservationController {
 
         return ResponseEntity.ok("예약 완료");
     }
+
+    // customer 예약 정보
+    @GetMapping("/customers/reservations")
+    public ResponseEntity<List<ReservationDto>> getAllCustomerReservations(@RequestHeader(name = AUTH_TOKEN) String token) {
+
+        List<Reservation> reservations = reservationService.getAllReservationByCustomerId(
+            jwtTokenProvider.getId(token));
+
+        return ResponseEntity.ok(
+            reservations.stream()
+                .map(ReservationDto::fromEntity)
+                .collect(Collectors.toList())
+        );
+    }
+
+    // 특정 매장 모든 예약 정보(점장 용)
+    @GetMapping("/restaurants/{restaurantId}/reservations")
+    public ResponseEntity<List<ReservationDto>> getAllReservations(@PathVariable Long restaurantId) {
+
+        List<Reservation> reservations = reservationService.getAllReservation(restaurantId);
+
+        return ResponseEntity.ok(
+            reservations.stream()
+                .map(ReservationDto::fromEntity)
+                .collect(Collectors.toList())
+        );
+    }
+
+
+
+
+
+
+
+
 
 
 

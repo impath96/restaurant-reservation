@@ -10,6 +10,7 @@ import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import com.zerobase.reservation.type.ReservationStatus;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -47,6 +48,20 @@ public class ReservationService {
                 .build()
         );
 
+    }
+
+    @Transactional
+    public List<Reservation> getAllReservationByCustomerId(Long customerId) {
+
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -> new UserNotFoundException(""));
+
+        return reservationRepository.findAllByCustomerId(customer.getId());
+    }
+
+    @Transactional
+    public List<Reservation> getAllReservation(Long restaurantId) {
+        return reservationRepository.findAllByRestaurantId(restaurantId);
     }
 
     // 10자리 랜덤 문자(알파벳 + 숫자)

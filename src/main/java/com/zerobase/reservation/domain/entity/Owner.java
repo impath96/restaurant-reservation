@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "owners")
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Owner extends BaseEntity{
 
     @Id
@@ -42,7 +44,6 @@ public class Owner extends BaseEntity{
     private Role role;
 
     private boolean isPartner;
-
 
     public void registerPartner() {
         this.isPartner = true;

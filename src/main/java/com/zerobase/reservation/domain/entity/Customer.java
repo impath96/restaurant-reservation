@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "customers")
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Customer extends BaseEntity{
 
     @Id
@@ -39,6 +41,5 @@ public class Customer extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
 }

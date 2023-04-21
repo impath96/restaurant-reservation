@@ -4,3 +4,10 @@ X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iL
 Content-Type: application/json
 
 {"reservationTime" : "2022-10-11T16:00:00"}
+
+### 예약 정보 보기(고객 용)
+GET http://localhost:8080/customers/reservations
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODIwNjE3NzAsImV4cCI6MTY4MjA2NTM3MH0.ZS8kAPFTEQf0exb28jgdcnWI9OTDxHjPeZQBHpgIJo0
+
+### 예약 정보 보기(점장 용)
+GET http://localhost:8080/restaurants/1/reservations

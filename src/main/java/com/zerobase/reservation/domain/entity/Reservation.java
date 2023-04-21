@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "reservations")
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Reservation extends BaseEntity {
 
     @Id
@@ -50,6 +52,5 @@ public class Reservation extends BaseEntity {
 
     @Column(name = "customer_name")
     private String customerName;
-
 
 }
