@@ -31,16 +31,16 @@ public class OwnerService {
             throw new DuplicatedEmailException(email);
         }
 
-        Owner owner = Owner.builder()
-            .email(ownerCreateRequestDto.getEmail())
-            .name(ownerCreateRequestDto.getName())
-            .password(ownerCreateRequestDto.getPassword())
-            .phoneNumber(ownerCreateRequestDto.getPhoneNumber())
-            .role(Role.OWNER)
-            .isPartner(false)
-            .build();
-
-        return ownerRepository.save(owner);
+        return ownerRepository.save(
+            Owner.builder()
+                .email(email)
+                .name(ownerCreateRequestDto.getName())
+                .password(ownerCreateRequestDto.getPassword())
+                .phoneNumber(ownerCreateRequestDto.getPhoneNumber())
+                .role(Role.OWNER)
+                .isPartner(false)
+                .build()
+        );
     }
 
     @Transactional
@@ -67,7 +67,9 @@ public class OwnerService {
         if (owner.isPartner()) {
             throw new OwnerAlreadyPartnerException();
         }
+
         owner.registerPartner();
+
         return ownerRepository.save(owner);
     }
 

@@ -25,19 +25,19 @@ public class CustomerService {
         // 이메일 중복 체크
         String email = customerCreateRequestDto.getEmail();
 
-        if (customerRepository.existsByEmail(email)) {
+        if (isExistsByEmail(email)) {
             throw new DuplicatedEmailException(email);
         }
 
-        Customer customer = Customer.builder()
-            .email(customerCreateRequestDto.getEmail())
-            .name(customerCreateRequestDto.getName())
-            .password(customerCreateRequestDto.getPassword())
-            .phoneNumber(customerCreateRequestDto.getPhoneNumber())
-            .role(Role.CUSTOMER)
-            .build();
-
-        return customerRepository.save(customer);
+        return customerRepository.save(
+            Customer.builder()
+                .email(email)
+                .name(customerCreateRequestDto.getName())
+                .password(customerCreateRequestDto.getPassword())
+                .phoneNumber(customerCreateRequestDto.getPhoneNumber())
+                .role(Role.CUSTOMER)
+                .build()
+        );
 
     }
 
@@ -53,4 +53,9 @@ public class CustomerService {
             customer.getRole());
 
     }
+
+    private boolean isExistsByEmail(String email) {
+        return customerRepository.existsByEmail(email);
+    }
+
 }

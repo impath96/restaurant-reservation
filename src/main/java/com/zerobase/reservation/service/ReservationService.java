@@ -36,16 +36,16 @@ public class ReservationService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
             .orElseThrow(() -> new RestaurantNotFoundException());
 
-        Reservation reservation = Reservation.builder()
-            .customer(customer)
-            .restaurant(restaurant)
-            .reservationTime(reservationTime)
-            .code(generateCode())
-            .status(ReservationStatus.WAITING_APPROVAL)
-            .customerName(customer.getName())
-            .build();
-
-        return reservationRepository.save(reservation);
+        return reservationRepository.save(
+            Reservation.builder()
+                .customer(customer)
+                .restaurant(restaurant)
+                .reservationTime(reservationTime)
+                .code(generateCode())
+                .status(ReservationStatus.WAITING_APPROVAL)
+                .customerName(customer.getName())
+                .build()
+        );
 
     }
 
