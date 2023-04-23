@@ -1,7 +1,11 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
+import com.zerobase.reservation.domain.entity.Owner;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.service.OwnerService;
+import com.zerobase.reservation.type.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,10 +23,24 @@ public class OwnerController {
     private final OwnerService ownerService;
 
     // 파트너 가입
+    // 나중에 Jwt 용 User 객체를 만들기
     @PutMapping("/partner")
     public ResponseEntity<String> registerPartner(@RequestHeader(name = AUTH_TOKEN) String token) {
-        ownerService.registerPartner(jwtTokenProvider.getEmail(token));
-        return ResponseEntity.ok("파트너 가입 완료");
+
+        // 회원 권한 체크
+        if (!isOwnerRole(jwtTokenProvider.getRole(token))) {
+            throw new CustomException(ErrorCode.USER_ROLE_NOT_OWNER);
+        }
+
+        Owner owner = ownerService.registerPartner(jwtTokenProvider.getEmail(token));
+
+        // 메시지 만드는 메서드 따로 추출 하기 or 파트너 가입에 대한 Response 객체 만들기
+        return ResponseEntity.ok(owner.getName() + "님, 파트너 가입이 완료되었습니다.");
+    }
+
+    // 권한이 Owner 인지 체크
+    private boolean isOwnerRole(Role role) {
+        return role == Role.OWNER;
     }
 
     // 점장 정보 수정

@@ -1,6 +1,7 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.LogInForm;
+import com.zerobase.reservation.dto.LogInResponse;
 import com.zerobase.reservation.service.CustomerService;
 import com.zerobase.reservation.service.OwnerService;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,12 @@ public class LogInController {
     private final OwnerService ownerService;
 
     @PostMapping("/customers")
-    public ResponseEntity<String> customerLogIn(@RequestBody LogInForm logInForm) {
-        return ResponseEntity.ok(customerService.logIn(logInForm));
+    public ResponseEntity<LogInResponse> customerLogIn(@RequestBody LogInForm logInForm) {
+        return ResponseEntity.ok(new LogInResponse(customerService.logIn(logInForm)));
     }
 
     @PostMapping("/owners")
-    public ResponseEntity<String> ownerLogIn(@RequestBody LogInForm logInForm) {
-        return ResponseEntity.ok(ownerService.logIn(logInForm));
+    public ResponseEntity<LogInResponse> ownerLogIn(@RequestBody LogInForm logInForm) {
+        return ResponseEntity.ok(new LogInResponse(ownerService.logIn(logInForm)));
     }
-
 }

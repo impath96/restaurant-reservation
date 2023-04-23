@@ -5,7 +5,10 @@ import com.zerobase.reservation.dto.RestaurantCreateRequestDto;
 import com.zerobase.reservation.dto.RestaurantCreateResponseDto;
 import com.zerobase.reservation.dto.RestaurantDetailDto;
 import com.zerobase.reservation.dto.RestaurantDto;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.service.RestaurantService;
+import com.zerobase.reservation.type.Role;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +36,15 @@ public class RestaurantController {
         @RequestHeader(name = AUTH_TOKEN) String token,
         @RequestBody RestaurantCreateRequestDto requestDto
     ) {
+
+        // 회원 권한 체크
+        if (!isOwnerRole(jwtTokenProvider.getRole(token))) {
+            throw new CustomException(ErrorCode.USER_ROLE_NOT_OWNER);
+        }
+
         return restaurantService.addRestaurant(jwtTokenProvider.getEmail(token), requestDto);
     }
+
 
     // 정렬 조건(order : name(가나다순), rating(별점))
     // 검색 조건(name : 매장이름)
@@ -55,6 +65,11 @@ public class RestaurantController {
 
         return restaurantService.getRestaurantById(restaurantId);
 
+    }
+
+    // 권한이 Owner 인지 체크
+    private boolean isOwnerRole(Role role) {
+        return role == Role.OWNER;
     }
 
 

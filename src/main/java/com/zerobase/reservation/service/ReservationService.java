@@ -31,11 +31,8 @@ public class ReservationService {
     public Reservation makeReservation(String customerEmail, Long restaurantId,
         LocalDateTime reservationTime) {
 
-        Customer customer = customerRepository.findByEmail(customerEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
+        Customer customer = findCustomerByEmail(customerEmail);
+        Restaurant restaurant = findRestaurantById(restaurantId);
 
         return reservationRepository.save(
             Reservation.builder()
@@ -51,11 +48,9 @@ public class ReservationService {
     }
 
     @Transactional
-    public List<Reservation> getAllReservationByCustomerId(Long customerId) {
+    public List<Reservation> getAllReservationByCustomerId(String customerEmail) {
 
-        Customer customer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
+        Customer customer = findCustomerByEmail(customerEmail);
         return reservationRepository.findAllByCustomerId(customer.getId());
     }
 
@@ -80,7 +75,7 @@ public class ReservationService {
     @Transactional
     public void rejectReservation(Long ownerId, Long reservationId) {
 
-        Reservation reservation = findReservation(reservationId);
+        Reservation reservation = findReservationById(reservationId);
 
         // 해당 매장의 점장이 아닐 경우
         if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
@@ -99,7 +94,7 @@ public class ReservationService {
     @Transactional
     public void approveReservation(Long ownerId, Long reservationId) {
 
-        Reservation reservation = findReservation(reservationId);
+        Reservation reservation = findReservationById(reservationId);
 
         // 해당 매장의 점장이 아닐 경우
         if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
@@ -114,9 +109,19 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    private Reservation findReservation(Long reservationId) {
+    private Restaurant findRestaurantById(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId)
+            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
+    }
+
+    private Reservation findReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId)
             .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+    }
+
+    private Customer findCustomerByEmail(String customerEmail) {
+        return customerRepository.findByEmail(customerEmail)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     // 10자리 랜덤 문자(알파벳 + 숫자)

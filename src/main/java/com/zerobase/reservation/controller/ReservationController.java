@@ -58,7 +58,7 @@ public class ReservationController {
     public ResponseEntity<List<ReservationDto>> getAllCustomerReservations(@RequestHeader(name = AUTH_TOKEN) String token) {
 
         List<Reservation> reservations = reservationService.getAllReservationByCustomerId(
-            jwtTokenProvider.getId(token));
+            jwtTokenProvider.getEmail(token));
 
         return ResponseEntity.ok(
             reservations.stream()

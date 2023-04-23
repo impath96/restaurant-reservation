@@ -27,8 +27,7 @@ public class RestaurantService {
         String  ownerEmail,
         RestaurantCreateRequestDto requestDto) {
 
-        Owner owner = ownerRepository.findByEmail(ownerEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Owner owner = findOwnerByEmail(ownerEmail);
 
         // 점장이 파트너 가입 되어 있는지 확인
         if (!owner.isPartner()) {
@@ -47,7 +46,6 @@ public class RestaurantService {
             )
         );
     }
-
 
     public List<RestaurantDto> getAllRestaurant(String orderCondition,
         String restaurantName) {
@@ -75,13 +73,21 @@ public class RestaurantService {
             .collect(Collectors.toList());
     }
 
-
     public RestaurantDetailDto getRestaurantById(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
+        Restaurant restaurant = findRestaurantById(restaurantId);
 
         return RestaurantDetailDto.fromEntity(restaurant);
 
+    }
+
+    private Owner findOwnerByEmail(String ownerEmail) {
+        return ownerRepository.findByEmail(ownerEmail)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private Restaurant findRestaurantById(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId)
+            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
     }
 
 

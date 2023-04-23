@@ -12,6 +12,7 @@ public enum ErrorCode {
     USER_LOGIN_FAIL(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 틀렸습니다."),
     OWNER_ALREADY_PARTNER(HttpStatus.BAD_REQUEST, "이미 파트너에 가입한 상태입니다."),
     OWNER_NOT_PARTNER(HttpStatus.BAD_REQUEST, "파트너에 가입되어 있지 않습니다."),
+    USER_ROLE_NOT_OWNER(HttpStatus.BAD_REQUEST, "사용자 권한이 점장이 아닙니다."),
 
     // RESTAURANT
     RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 매장입니다."),
