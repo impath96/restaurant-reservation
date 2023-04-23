@@ -1,0 +1,10 @@
+### 리뷰 작성
+POST http://localhost:8080/reviews
+Content-Type: application/json
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODIyMzQyMTQsImV4cCI6MTY4MjIzNzgxNH0.d2Hyhwkg-isGp3bFLjCJP08Su7JKFsiqFwqk5vwc8Rc
+
+{
+  "restaurantId" : 1,
+  "content" : "리뷰 작성",
+  "score" : 4
+}
