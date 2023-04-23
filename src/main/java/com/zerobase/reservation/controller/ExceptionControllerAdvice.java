@@ -1,82 +1,44 @@
 package com.zerobase.reservation.controller;
 
-import com.zerobase.reservation.dto.ErrorResponse;
-import com.zerobase.reservation.exception.DuplicatedEmailException;
-import com.zerobase.reservation.exception.LogInFailException;
-import com.zerobase.reservation.exception.OwnerNotPartnerException;
-import com.zerobase.reservation.exception.ReservationNotCompleteException;
-import com.zerobase.reservation.exception.ReservationNotFoundException;
-import com.zerobase.reservation.exception.ReservationNotWaitingApprovalException;
-import com.zerobase.reservation.exception.ReservationVisitTimeOverException;
-import com.zerobase.reservation.exception.RestaurantNotFoundException;
-import com.zerobase.reservation.exception.UnMatchedRestaurantException;
-import com.zerobase.reservation.exception.UserNotFoundException;
-import org.springframework.http.HttpStatus;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RestaurantNotFoundException.class)
-    public ErrorResponse handleRestaurantNotFound(RestaurantNotFoundException exception) {
-        return new ErrorResponse(exception.getMessage());
+    @ExceptionHandler({CustomException.class})
+    public ResponseEntity<ExceptionResponse> customRequestException(
+        final CustomException exception) {
+
+        log.warn("api Exception : {}", exception.getErrorCode());
+
+        return ResponseEntity.badRequest()
+            .body(new ExceptionResponse(exception.getMessage(), exception.getErrorCode()));
+
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFound(UserNotFoundException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
+    @Getter
+    private static class ExceptionResponse {
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ReservationNotFoundException.class)
-    public ErrorResponse handleReservationNotFound(ReservationNotFoundException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
+        private final String message;
+        private final ErrorCode code;
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicatedEmailException.class)
-    public ErrorResponse handleDuplicatedEmail(DuplicatedEmailException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
+        public ExceptionResponse(final String message, final ErrorCode errorCode) {
+            this.message = message;
+            this.code = errorCode;
+        }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(LogInFailException.class)
-    public ErrorResponse handleLogInFail(LogInFailException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
+        @Override
+        public String toString() {
+            return String.format("{ %s : %s }", message, code.getDetail());
+        }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(OwnerNotPartnerException.class)
-    public ErrorResponse handleOwnerNotPartner(OwnerNotPartnerException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UnMatchedRestaurantException.class)
-    public ErrorResponse handleUnMatchedRestaurant(UnMatchedRestaurantException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ReservationNotCompleteException.class)
-    public ErrorResponse handleReservationNotComplete(ReservationNotCompleteException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ReservationVisitTimeOverException.class)
-    public ErrorResponse handleReservationVisitTimeOver(ReservationVisitTimeOverException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ReservationNotWaitingApprovalException.class)
-    public ErrorResponse handleReservationNotWaitingApproval(ReservationNotWaitingApprovalException exception) {
-        return new ErrorResponse(exception.getMessage());
     }
 
 }

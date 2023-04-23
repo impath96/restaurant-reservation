@@ -5,8 +5,8 @@ import com.zerobase.reservation.domain.entity.Customer;
 import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.dto.CustomerCreateRequestDto;
 import com.zerobase.reservation.dto.LogInForm;
-import com.zerobase.reservation.exception.DuplicatedEmailException;
-import com.zerobase.reservation.exception.LogInFailException;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.type.Role;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class CustomerService {
         String email = customerCreateRequestDto.getEmail();
 
         if (isExistsByEmail(email)) {
-            throw new DuplicatedEmailException(email);
+            throw new CustomException(ErrorCode.USER_DUPLICATED_EMAIL);
         }
 
         return customerRepository.save(
@@ -47,7 +47,7 @@ public class CustomerService {
         Customer customer = customerRepository.findByEmailAndPassword(
                 form.getEmail(),
                 form.getPassword())
-            .orElseThrow(() -> new LogInFailException());
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_LOGIN_FAIL));
 
         return jwtTokenProvider.createToken(customer.getEmail(), customer.getId(),
             customer.getRole());

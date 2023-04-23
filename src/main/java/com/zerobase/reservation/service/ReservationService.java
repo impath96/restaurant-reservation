@@ -6,11 +6,8 @@ import com.zerobase.reservation.domain.entity.Restaurant;
 import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.domain.repository.ReservationRepository;
 import com.zerobase.reservation.domain.repository.RestaurantRepository;
-import com.zerobase.reservation.exception.ReservationNotFoundException;
-import com.zerobase.reservation.exception.ReservationNotWaitingApprovalException;
-import com.zerobase.reservation.exception.RestaurantNotFoundException;
-import com.zerobase.reservation.exception.RestaurantUnMatchedOwnerException;
-import com.zerobase.reservation.exception.UserNotFoundException;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.type.ReservationStatus;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,10 +32,10 @@ public class ReservationService {
         LocalDateTime reservationTime) {
 
         Customer customer = customerRepository.findByEmail(customerEmail)
-            .orElseThrow(() -> new UserNotFoundException(customerEmail));
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-            .orElseThrow(() -> new RestaurantNotFoundException());
+            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
 
         return reservationRepository.save(
             Reservation.builder()
@@ -57,7 +54,7 @@ public class ReservationService {
     public List<Reservation> getAllReservationByCustomerId(Long customerId) {
 
         Customer customer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new UserNotFoundException(""));
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return reservationRepository.findAllByCustomerId(customer.getId());
     }
@@ -73,7 +70,7 @@ public class ReservationService {
         // 예약 존재하는지 확인
         Reservation reservation = reservationRepository.findByIdAndCustomerId(reservationId,
                 customerId)
-            .orElseThrow(() -> new ReservationNotFoundException());
+            .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         reservation.cancel();
         reservationRepository.save(reservation);
@@ -83,17 +80,16 @@ public class ReservationService {
     @Transactional
     public void rejectReservation(Long ownerId, Long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new ReservationNotFoundException());
+        Reservation reservation = findReservation(reservationId);
 
         // 해당 매장의 점장이 아닐 경우
         if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
-            throw new RestaurantUnMatchedOwnerException();
+            throw new CustomException(ErrorCode.RESTAURANT_OWNER_UN_MATCHED);
         }
 
         // 예약 상태 확인
         if (reservation.getStatus() != ReservationStatus.WAITING_APPROVAL) {
-            throw new ReservationNotWaitingApprovalException();
+            throw new CustomException(ErrorCode.RESERVATION_NOT_WAITING_APPROVAL);
         }
 
         reservation.reject();
@@ -103,20 +99,24 @@ public class ReservationService {
     @Transactional
     public void approveReservation(Long ownerId, Long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new ReservationNotFoundException());
+        Reservation reservation = findReservation(reservationId);
 
         // 해당 매장의 점장이 아닐 경우
         if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
-            throw new RestaurantUnMatchedOwnerException();
+            throw new CustomException(ErrorCode.RESTAURANT_OWNER_UN_MATCHED);
         }
 
         if (reservation.getStatus() != ReservationStatus.WAITING_APPROVAL) {
-            throw new ReservationNotWaitingApprovalException();
+            throw new CustomException(ErrorCode.RESERVATION_NOT_WAITING_APPROVAL);
         }
 
         reservation.approve();
         reservationRepository.save(reservation);
+    }
+
+    private Reservation findReservation(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+            .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
     }
 
     // 10자리 랜덤 문자(알파벳 + 숫자)

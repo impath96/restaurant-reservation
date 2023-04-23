@@ -5,7 +5,8 @@ import com.zerobase.reservation.domain.entity.Review;
 import com.zerobase.reservation.domain.repository.ReservationRepository;
 import com.zerobase.reservation.domain.repository.ReviewRepository;
 import com.zerobase.reservation.dto.ReviewCreateRequestDto;
-import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.type.ReservationStatus;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ReviewService {
 
         Reservation reservation = reservationRepository
             .findFirstByCustomerIdOrderByReservationTimeDesc(customerId)
-            .orElseThrow(() -> new ReservationNotFoundException());
+            .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         if (!(reservation.getStatus() == ReservationStatus.COMPLETE || reservation.getStatus() == ReservationStatus.VISITED)) {
             throw new RuntimeException("방문한 사람만 리뷰 작성이 가능합니다.");

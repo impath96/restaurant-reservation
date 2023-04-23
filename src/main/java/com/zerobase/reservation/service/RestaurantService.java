@@ -8,9 +8,8 @@ import com.zerobase.reservation.dto.RestaurantCreateRequestDto;
 import com.zerobase.reservation.dto.RestaurantCreateResponseDto;
 import com.zerobase.reservation.dto.RestaurantDetailDto;
 import com.zerobase.reservation.dto.RestaurantDto;
-import com.zerobase.reservation.exception.OwnerNotPartnerException;
-import com.zerobase.reservation.exception.RestaurantNotFoundException;
-import com.zerobase.reservation.exception.UserNotFoundException;
+import com.zerobase.reservation.exception.CustomException;
+import com.zerobase.reservation.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +28,11 @@ public class RestaurantService {
         RestaurantCreateRequestDto requestDto) {
 
         Owner owner = ownerRepository.findByEmail(ownerEmail)
-            .orElseThrow(() -> new UserNotFoundException(ownerEmail));
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 점장이 파트너 가입 되어 있는지 확인
         if (!owner.isPartner()) {
-            throw new OwnerNotPartnerException();
+            throw new CustomException(ErrorCode.OWNER_NOT_PARTNER);
         }
 
         return RestaurantCreateResponseDto.fromEntity(
@@ -79,7 +78,7 @@ public class RestaurantService {
 
     public RestaurantDetailDto getRestaurantById(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-            .orElseThrow(() -> new RestaurantNotFoundException());
+            .orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
 
         return RestaurantDetailDto.fromEntity(restaurant);
 
