@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,14 +77,19 @@ public class ReservationController {
         );
     }
 
+    // DELETE로 해야하나? 예약 취소
+    @PutMapping("/reservations/cancel")
+    public ResponseEntity<String> cancelReservation(
+        @RequestHeader(name = AUTH_TOKEN) String token,
+        @RequestBody Long reservationId
+    ) {
 
+        Long customerId = jwtTokenProvider.getId(token);
 
+        reservationService.cancelReservation(customerId, reservationId);
 
+        return ResponseEntity.ok("예약 취소 완료");
 
-
-
-
-
-
+    }
 
 }

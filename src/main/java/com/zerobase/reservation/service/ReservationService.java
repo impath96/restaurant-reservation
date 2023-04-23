@@ -6,6 +6,7 @@ import com.zerobase.reservation.domain.entity.Restaurant;
 import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.domain.repository.ReservationRepository;
 import com.zerobase.reservation.domain.repository.RestaurantRepository;
+import com.zerobase.reservation.exception.ReservationNotFoundException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import com.zerobase.reservation.type.ReservationStatus;
@@ -62,6 +63,19 @@ public class ReservationService {
     @Transactional
     public List<Reservation> getAllReservation(Long restaurantId) {
         return reservationRepository.findAllByRestaurantId(restaurantId);
+    }
+
+    @Transactional
+    public void cancelReservation(Long customerId, Long reservationId) {
+
+        // 예약 존재하는지 확인
+        Reservation reservation = reservationRepository.findByIdAndCustomerId(reservationId,
+                customerId)
+            .orElseThrow(() -> new ReservationNotFoundException());
+
+        reservation.cancel();
+        reservationRepository.save(reservation);
+
     }
 
     // 10자리 랜덤 문자(알파벳 + 숫자)

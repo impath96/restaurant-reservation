@@ -53,4 +53,8 @@ public class Reservation extends BaseEntity {
     @Column(name = "customer_name")
     private String customerName;
 
+    public void cancel() {
+        status = ReservationStatus.CANCEL;
+    }
+
 }
