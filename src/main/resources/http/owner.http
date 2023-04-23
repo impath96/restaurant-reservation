@@ -1,12 +1,12 @@
 ### 회원 가입
-POST http://localhost:8080/owners/signup
+POST http://localhost:8080/signup/owners
 Content-Type: application/json
 
 {"email" : "owner1@naver.com", "password" : "pass", "phoneNumber" : "010-1111-1111",
   "name" : "민호"}
 
 ### 로그인
-POST http://localhost:8080/owners/login
+POST http://localhost:8080/login/owners
 Content-Type: application/json
 
 {"email" : "owner1@naver.com", "password" :  "pass"}
