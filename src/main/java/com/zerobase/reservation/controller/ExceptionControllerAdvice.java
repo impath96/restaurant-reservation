@@ -4,8 +4,11 @@ import com.zerobase.reservation.dto.ErrorResponse;
 import com.zerobase.reservation.exception.DuplicatedEmailException;
 import com.zerobase.reservation.exception.LogInFailException;
 import com.zerobase.reservation.exception.OwnerNotPartnerException;
+import com.zerobase.reservation.exception.ReservationNotCompleteException;
 import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.ReservationVisitTimeOverException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
+import com.zerobase.reservation.exception.UnMatchedRestaurantException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,6 +53,25 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleOwnerNotPartner(OwnerNotPartnerException exception) {
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnMatchedRestaurantException.class)
+    public ErrorResponse handleUnMatchedRestaurant(UnMatchedRestaurantException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReservationNotCompleteException.class)
+    public ErrorResponse handleReservationNotComplete(ReservationNotCompleteException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReservationVisitTimeOverException.class)
+    public ErrorResponse handleReservationVisitTimeOver(ReservationVisitTimeOverException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
 
 
 

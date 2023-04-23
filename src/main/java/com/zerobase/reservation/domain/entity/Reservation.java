@@ -57,4 +57,8 @@ public class Reservation extends BaseEntity {
         status = ReservationStatus.CANCEL;
     }
 
+    public void visit() {
+        status = ReservationStatus.VISITED;
+    }
+
 }

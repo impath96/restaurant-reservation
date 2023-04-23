@@ -1,0 +1,8 @@
+### 키오스크 예약 방문 확인
+POST http://localhost:8080/kiosk/check
+Content-Type: application/json
+
+{
+  "restaurantId": 1,
+  "code": "uUbfnKBpUx"
+}
