@@ -11,3 +11,17 @@ X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iL
 
 ### 예약 정보 보기(점장 용)
 GET http://localhost:8080/restaurants/1/reservations
+
+### 예약 승인(점장 용)
+PUT http://localhost:8080/reservations/approve
+Content-Type: application/x-www-form-urlencoded
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwSklUSlAxd0V1eE5IdWdKelVjWWF5cjBDTW9aNlJpaFNQaHdSMmY4UFhBPSIsImp0aSI6IkNtWUR2NU1LNVlVeWlrOEtHTkR3b3c9PSIsInJvbGUiOiJPV05FUiIsImlhdCI6MTY4MjIyOTg0OCwiZXhwIjoxNjgyMjMzNDQ4fQ.JzcmMG_pqNTUIhUXATzbKt6xqV9zqLmIKLVOQrn0mo4
+
+reservationId=3
+
+### 예약 거절(점장 용)
+PUT http://localhost:8080/reservations/reject
+Content-Type: application/x-www-form-urlencoded
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwSklUSlAxd0V1eE5IdWdKelVjWWF5cjBDTW9aNlJpaFNQaHdSMmY4UFhBPSIsImp0aSI6IkNtWUR2NU1LNVlVeWlrOEtHTkR3b3c9PSIsInJvbGUiOiJPV05FUiIsImlhdCI6MTY4MjIyOTg0OCwiZXhwIjoxNjgyMjMzNDQ4fQ.JzcmMG_pqNTUIhUXATzbKt6xqV9zqLmIKLVOQrn0mo4
+
+reservationId=3

@@ -6,6 +6,7 @@ import com.zerobase.reservation.exception.LogInFailException;
 import com.zerobase.reservation.exception.OwnerNotPartnerException;
 import com.zerobase.reservation.exception.ReservationNotCompleteException;
 import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.ReservationNotWaitingApprovalException;
 import com.zerobase.reservation.exception.ReservationVisitTimeOverException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
 import com.zerobase.reservation.exception.UnMatchedRestaurantException;
@@ -72,9 +73,10 @@ public class ExceptionControllerAdvice {
         return new ErrorResponse(exception.getMessage());
     }
 
-
-
-
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReservationNotWaitingApprovalException.class)
+    public ErrorResponse handleReservationNotWaitingApproval(ReservationNotWaitingApprovalException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
 
 }

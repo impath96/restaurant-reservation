@@ -61,4 +61,11 @@ public class Reservation extends BaseEntity {
         status = ReservationStatus.VISITED;
     }
 
+    public void approve() {
+        status = ReservationStatus.COMPLETE;
+    }
+
+    public void reject() {
+        status = ReservationStatus.REJECTED;
+    }
 }

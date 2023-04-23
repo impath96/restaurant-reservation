@@ -7,7 +7,9 @@ import com.zerobase.reservation.domain.repository.CustomerRepository;
 import com.zerobase.reservation.domain.repository.ReservationRepository;
 import com.zerobase.reservation.domain.repository.RestaurantRepository;
 import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.ReservationNotWaitingApprovalException;
 import com.zerobase.reservation.exception.RestaurantNotFoundException;
+import com.zerobase.reservation.exception.RestaurantUnMatchedOwnerException;
 import com.zerobase.reservation.exception.UserNotFoundException;
 import com.zerobase.reservation.type.ReservationStatus;
 import java.time.LocalDateTime;
@@ -78,8 +80,48 @@ public class ReservationService {
 
     }
 
+    @Transactional
+    public void rejectReservation(Long ownerId, Long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+            .orElseThrow(() -> new ReservationNotFoundException());
+
+        // 해당 매장의 점장이 아닐 경우
+        if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
+            throw new RestaurantUnMatchedOwnerException();
+        }
+
+        // 예약 상태 확인
+        if (reservation.getStatus() != ReservationStatus.WAITING_APPROVAL) {
+            throw new ReservationNotWaitingApprovalException();
+        }
+
+        reservation.reject();
+        reservationRepository.save(reservation);
+    }
+
+    @Transactional
+    public void approveReservation(Long ownerId, Long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+            .orElseThrow(() -> new ReservationNotFoundException());
+
+        // 해당 매장의 점장이 아닐 경우
+        if (!reservation.getRestaurant().getOwner().getId().equals(ownerId)) {
+            throw new RestaurantUnMatchedOwnerException();
+        }
+
+        if (reservation.getStatus() != ReservationStatus.WAITING_APPROVAL) {
+            throw new ReservationNotWaitingApprovalException();
+        }
+
+        reservation.approve();
+        reservationRepository.save(reservation);
+    }
+
     // 10자리 랜덤 문자(알파벳 + 숫자)
     private String generateCode() {
         return RandomStringUtils.randomAlphabetic(CODE_LENGTH);
     }
+
 }

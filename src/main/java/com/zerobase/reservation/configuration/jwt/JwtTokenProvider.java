@@ -53,6 +53,18 @@ public class JwtTokenProvider {
         return Long.parseLong(Aes256Utils.decrypt(id));
     }
 
+    public Role getRole(String token) {
+
+        String role  = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role");
+
+        if (role.equalsIgnoreCase("owner")) {
+            return Role.OWNER;
+        }else {
+            return Role.CUSTOMER;
+        }
+
+    }
+
 
 
 }
