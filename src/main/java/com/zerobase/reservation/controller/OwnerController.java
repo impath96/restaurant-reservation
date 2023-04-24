@@ -25,6 +25,12 @@ public class OwnerController {
 
     // 파트너 가입
     // 나중에 Jwt 용 User 객체를 만들기
+
+    /**
+     * 점장 파트너 가입
+     * - 1) 점장 권한 체크
+     * - 2) 파트너 가입(특별한 가입 조건 없이 바로 가입하도록)
+     */
     @PutMapping("/partner")
     public ResponseEntity<String> registerPartner(@RequestHeader(name = AUTH_TOKEN) String token) {
 

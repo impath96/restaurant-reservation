@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 리뷰 관련 Controller
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -21,6 +24,10 @@ public class ReviewController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ReviewService reviewService;
+
+    /**
+     * 리뷰 작성(고객 용)
+     */
     @PostMapping
     public ResponseEntity<String> write(
         @RequestHeader(name = AUTH_TOKEN) String token,

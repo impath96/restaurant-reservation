@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 예약 관련 Controller
+ */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +42,11 @@ public class ReservationController {
 
     // 예약 하기
     // 고민할 부분 : 예약 시 회원 가입 유무를 Filter 활용해야 하나?
+
+    /**
+     * 예약 신청
+     *
+     */
     @PostMapping("/restaurants/{restaurantId}/reservations")
     public ResponseEntity<String> makeReservation(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -54,6 +62,10 @@ public class ReservationController {
     }
 
     // customer 예약 정보
+
+    /**
+     * 고객의 모든 예약 정보
+     */
     @GetMapping("/customers/reservations")
     public ResponseEntity<List<ReservationDto>> getAllCustomerReservations(
         @RequestHeader(name = AUTH_TOKEN) String token) {
@@ -69,7 +81,9 @@ public class ReservationController {
         );
     }
 
-    // 특정 매장 모든 예약 정보(점장 용)
+    /**
+     * 매장의 모든 예약 정보(점장용)
+     */
     @GetMapping("/restaurants/{restaurantId}/reservations")
     public ResponseEntity<List<ReservationDto>> getAllReservations(
         @PathVariable Long restaurantId) {
@@ -83,7 +97,9 @@ public class ReservationController {
         );
     }
 
-    // DELETE로 해야하나? 예약 취소
+    /**
+     * 예약 취소(점장 용)
+     */
     @PutMapping("/reservations/cancel")
     public ResponseEntity<String> cancelReservation(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -98,6 +114,10 @@ public class ReservationController {
     }
 
     // 예약 거절
+
+    /**
+     * 예약 거절(점장 용)
+     */
     @PutMapping("/reservations/reject")
     public ResponseEntity<String> rejectReservation(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -116,7 +136,9 @@ public class ReservationController {
         return ResponseEntity.ok("예약이 거절되었습니다.");
     }
 
-    // 예약 승인
+    /**
+     * 예약 승인(점장 용)
+     */
     @PutMapping("/reservations/approve")
     public ResponseEntity<String> approveReservation(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -124,7 +146,7 @@ public class ReservationController {
     ) {
 
         User user = jwtTokenProvider.getUser(token);
-
+        System.out.println(user);
         if (user.getRole() != Role.OWNER) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("점장만 접근이 가능합니다.");

@@ -15,30 +15,41 @@ public class KioskService {
 
     private final ReservationRepository reservationRepository;
 
+    /**
+     *  예약 확인
+     *  -1) 입력받은 code에 해당하는 예약 정보가 있는지 확인
+     *  -2) 예약한 식당이 맞는지 확인
+     *  -3) 예약 상태 확인(승인 완료의 경우에만 정상 처리)
+     *  -4) 10분 전 방문 여부 확인
+     *
+     */
     public Reservation checkReservation(Long restaurantId, String code) {
 
-        // 1) code에 해당하는 reservation이 존재하는지 체크
         Reservation reservation = reservationRepository.findByCode(code)
             .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
-        // 2) 매장이 일치한지
-        if (restaurantId.intValue() != reservation.getRestaurant().getId().intValue()) {
-            throw  new CustomException(ErrorCode.RESTAURANT_UN_MATCHED);
-        }
-
-        // 3) 예약 상태 확인
-        if (reservation.getStatus() != ReservationStatus.COMPLETE) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_COMPLETE);
-        }
-
-        // 4) 10전 도착하지 않았을 경우 - 에약 방문 시간 초과
-        if (reservation.getReservationTime().isBefore(LocalDateTime.now().plusMinutes(10))) {
-            throw new CustomException(ErrorCode.RESERVATION_TIME_OVER);
-        }
+        validate(restaurantId, reservation);
 
         reservation.visit();
 
         return reservationRepository.save(reservation);
+    }
+
+    private void validate(Long restaurantId, Reservation reservation) {
+
+        if (!reservation.getRestaurant().getId().equals(restaurantId)) {
+            throw new CustomException(ErrorCode.RESTAURANT_UN_MATCHED);
+        }
+
+        if (reservation.getStatus() != ReservationStatus.COMPLETE) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_COMPLETE);
+        }
+
+        if (reservation.getReservationTime().isBefore(LocalDateTime.now().plusMinutes(10))) {
+            reservation.timeOver();
+            reservationRepository.save(reservation);
+            throw new CustomException(ErrorCode.RESERVATION_TIME_OVER);
+        }
     }
 
 }

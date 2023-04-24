@@ -68,4 +68,8 @@ public class Reservation extends BaseEntity {
     public void reject() {
         status = ReservationStatus.REJECTED;
     }
+
+    public void timeOver() {
+        status = ReservationStatus.UNAVAILABLE;
+    }
 }

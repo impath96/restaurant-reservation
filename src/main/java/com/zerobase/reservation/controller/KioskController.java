@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *  키오스크 관련 Controller
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/kiosk")
@@ -16,6 +19,9 @@ public class KioskController {
 
     private final KioskService kioskService;
 
+    /**
+     * 예약 확인 및 방문 처리 메서드
+     */
     @PostMapping("/check")
     public ResponseEntity<String> checkReservation(@RequestBody ReservationCheckRequestDto requestDto) {
 

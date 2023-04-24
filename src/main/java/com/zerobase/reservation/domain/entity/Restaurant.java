@@ -59,5 +59,8 @@ public class Restaurant extends BaseEntity {
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
+    public boolean isOwner(Long ownerId) {
+        return owner.getId().equals(ownerId);
+    }
 
 }

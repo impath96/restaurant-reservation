@@ -22,7 +22,10 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final OwnerRepository ownerRepository;
 
-    // 매장 등록
+    /**
+     * 매장 등록
+     *
+     */
     public RestaurantCreateResponseDto addRestaurant(
         Long  ownerId,
         RestaurantCreateRequestDto requestDto) {

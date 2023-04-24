@@ -11,6 +11,13 @@ import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 
+/**
+ * JWT 토큰 관련 클래스
+ *
+ * 1) 토큰 생성
+ * 2) User 반환(id, email, role)
+ *
+ */
 public class JwtTokenProvider {
 
     private String secretKey = "secretKeysecretKeysecretKeysecretKeysecretKeysecretKey";
@@ -46,35 +53,9 @@ public class JwtTokenProvider {
         return User.builder()
             .id(Long.parseLong(Aes256Utils.decrypt(claims.getId())))
             .email( Aes256Utils.decrypt(claims.getSubject()))
-            .role(Role.valueOfRole((String) claims.get("role")))
+            .role(Role.valueOf((String) claims.get("role")))
             .build();
 
     }
-
-//    public String getEmail(String token) {
-//
-//        String encryptedEmail = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-//            .getSubject();
-//
-//        return Aes256Utils.decrypt(encryptedEmail);
-//    }
-//
-//    public Long getId(String token) {
-//        String id = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getId();
-//
-//        return Long.parseLong(Aes256Utils.decrypt(id));
-//    }
-//
-//    public Role getRole(String token) {
-//
-//        String role  = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role");
-//
-//        if (role.equalsIgnoreCase("owner")) {
-//            return Role.OWNER;
-//        }else {
-//            return Role.CUSTOMER;
-//        }
-//
-//    }
 
 }

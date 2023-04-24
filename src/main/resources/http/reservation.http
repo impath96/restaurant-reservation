@@ -1,9 +1,9 @@
 ### 예약 하기
 POST http://localhost:8080/restaurants/1/reservations
-X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODE4OTIzMjMsImV4cCI6MTY4MTg5NTkyM30.yJzDbXwRJ-OiffahRwKnEkNccETFvT8nX_YGDfnxdSk
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQZ1daaEJxcDJxRmt3MlNQbEU0TzV3PT0iLCJqdGkiOiJDbVlEdjVNSzVZVXlpazhLR05Ed293PT0iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE2ODIzMjQzMzAsImV4cCI6MTY4MjMyNzkzMH0.7JKnLGNQBL3Kznzj387RCCbOFiEGamWLYl-_Jr_-tkM
 Content-Type: application/json
 
-{"reservationTime" : "2022-10-11T16:00:00"}
+{"reservationTime" : "2023-04-24T18:00:00"}
 
 ### 예약 정보 보기(고객 용)
 GET http://localhost:8080/customers/reservations
@@ -15,9 +15,9 @@ GET http://localhost:8080/restaurants/1/reservations
 ### 예약 승인(점장 용)
 PUT http://localhost:8080/reservations/approve
 Content-Type: application/x-www-form-urlencoded
-X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwSklUSlAxd0V1eE5IdWdKelVjWWF5cjBDTW9aNlJpaFNQaHdSMmY4UFhBPSIsImp0aSI6IkNtWUR2NU1LNVlVeWlrOEtHTkR3b3c9PSIsInJvbGUiOiJPV05FUiIsImlhdCI6MTY4MjIyOTg0OCwiZXhwIjoxNjgyMjMzNDQ4fQ.JzcmMG_pqNTUIhUXATzbKt6xqV9zqLmIKLVOQrn0mo4
+X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwSklUSlAxd0V1eE5IdWdKelVjWWF5cjBDTW9aNlJpaFNQaHdSMmY4UFhBPSIsImp0aSI6IkNtWUR2NU1LNVlVeWlrOEtHTkR3b3c9PSIsInJvbGUiOiJPV05FUiIsImlhdCI6MTY4MjMyNDk1NiwiZXhwIjoxNjgyMzI4NTU2fQ.dWdEQL62CuTtq7gaDoHGZILHBv14MCE2qcxKHR_4-T4
 
-reservationId=3
+reservationId=7
 
 ### 예약 거절(점장 용)
 PUT http://localhost:8080/reservations/reject

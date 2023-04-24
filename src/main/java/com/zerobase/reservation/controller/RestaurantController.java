@@ -31,7 +31,9 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 매장 등록
+    /**
+     * 매장 등록(점장 용)
+     */
     @PostMapping
     public RestaurantCreateResponseDto addRestaurant(
         @RequestHeader(name = AUTH_TOKEN) String token,
@@ -48,10 +50,11 @@ public class RestaurantController {
         return restaurantService.addRestaurant(user.getId(), requestDto);
     }
 
-
-    // 정렬 조건(order : name(가나다순), rating(별점))
-    // 검색 조건(name : 매장이름)
-    // 매장 조회
+    /**
+     * 매장 조회
+     * 1) 정렬 조건 : 가나다순, 별점순
+     * 2) 검색 조건 : 매장 이름
+     */
     @GetMapping
     public List<RestaurantDto> getRestaurants(
         @RequestParam(name = "order", required = false, defaultValue = "name") String orderCondition,
@@ -62,7 +65,9 @@ public class RestaurantController {
 
     }
 
-    // 매장 상세 조회
+    /**
+     * 매장 상세 조회
+     */
     @GetMapping("{restaurantId}")
     public RestaurantDetailDto getRestaurant(@PathVariable Long restaurantId) {
 

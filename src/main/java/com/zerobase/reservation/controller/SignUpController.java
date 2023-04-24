@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 회원 가입 Controller
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/signup")
@@ -23,7 +26,9 @@ public class SignUpController {
     private final CustomerService customerService;
     private final OwnerService ownerService;
 
-    // 고객 회원가입
+    /**
+     * 고객 회원가입
+     */
     @PostMapping("/customers")
     public ResponseEntity<String> customerSignUp(@RequestBody CustomerCreateRequestDto requestDto)
         throws URISyntaxException {
@@ -35,7 +40,9 @@ public class SignUpController {
             .body("{}");
     }
 
-    // 점장 회원가입
+    /**
+     * 점장 회원가입
+     */
     @PostMapping("/owners")
     public ResponseEntity<String> ownerSignUp(@RequestBody OwnerCreateRequestDto requestDto)
         throws URISyntaxException {

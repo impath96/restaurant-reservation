@@ -1,6 +1,5 @@
 package com.zerobase.reservation.type;
 
-import java.util.Arrays;
 import lombok.Getter;
 
 @Getter
@@ -15,10 +14,4 @@ public enum Role {
         this.role = role;
     }
 
-    public static Role valueOfRole(String role) {
-        return Arrays.stream(values())
-            .filter(value -> value.role.equals(role))
-            .findAny()
-            .orElse(null);
-    }
 }
