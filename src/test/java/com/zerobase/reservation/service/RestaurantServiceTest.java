@@ -43,7 +43,7 @@ class RestaurantServiceTest {
             .willReturn(restaurant);
 
         RestaurantCreateResponseDto restaurantCreateResponseDto = restaurantService.addRestaurant(
-            "email@naver.com",
+            1L,
             new RestaurantCreateRequestDto(name, phoneNumber, address, description)
         );
 

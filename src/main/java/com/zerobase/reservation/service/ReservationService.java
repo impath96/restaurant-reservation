@@ -25,14 +25,21 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     private static final int CODE_LENGTH = 10;
+    private static final int MIN_RESERVATION_AVAILABLE_TIME = 30;
 
     // 예약 하기
     @Transactional
-    public Reservation makeReservation(String customerEmail, Long restaurantId,
+    public Reservation makeReservation(Long customerId, Long restaurantId,
         LocalDateTime reservationTime) {
 
-        Customer customer = findCustomerByEmail(customerEmail);
+        Customer customer = findCustomerById(customerId);
         Restaurant restaurant = findRestaurantById(restaurantId);
+
+        // 1) 예약 시간이 현재 시간보다 이전인지 체크
+        // 2) 최소 예약 가능 시간 : 현재 시간 + 30분으로 설정
+        if (!isValidReservationTime(reservationTime)) {
+            throw new CustomException(ErrorCode.INVALID_RESERVATION_TIME);
+        }
 
         return reservationRepository.save(
             Reservation.builder()
@@ -48,9 +55,9 @@ public class ReservationService {
     }
 
     @Transactional
-    public List<Reservation> getAllReservationByCustomerId(String customerEmail) {
+    public List<Reservation> getAllReservationByCustomerId(Long userId) {
 
-        Customer customer = findCustomerByEmail(customerEmail);
+        Customer customer = findCustomerById(userId);
         return reservationRepository.findAllByCustomerId(customer.getId());
     }
 
@@ -68,6 +75,7 @@ public class ReservationService {
             .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         reservation.cancel();
+
         reservationRepository.save(reservation);
 
     }
@@ -92,7 +100,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void approveReservation(Long ownerId, Long reservationId) {
+    public Reservation approveReservation(Long ownerId, Long reservationId) {
 
         Reservation reservation = findReservationById(reservationId);
 
@@ -106,7 +114,7 @@ public class ReservationService {
         }
 
         reservation.approve();
-        reservationRepository.save(reservation);
+        return reservationRepository.save(reservation);
     }
 
     private Restaurant findRestaurantById(Long restaurantId) {
@@ -119,9 +127,17 @@ public class ReservationService {
             .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
     }
 
-    private Customer findCustomerByEmail(String customerEmail) {
-        return customerRepository.findByEmail(customerEmail)
+    private Customer findCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private boolean isValidReservationTime(LocalDateTime reservationTime) {
+        if (reservationTime.isBefore(LocalDateTime.now())) {
+            return false;
+        }
+        return !reservationTime.isBefore(LocalDateTime.now().plusMinutes(
+            MIN_RESERVATION_AVAILABLE_TIME));
     }
 
     // 10자리 랜덤 문자(알파벳 + 숫자)

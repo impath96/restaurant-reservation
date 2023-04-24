@@ -2,6 +2,7 @@ package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
 import com.zerobase.reservation.dto.ReviewCreateRequestDto;
+import com.zerobase.reservation.dto.User;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,10 @@ public class ReviewController {
         @RequestBody ReviewCreateRequestDto requestDto
     ) {
 
-        Long customerId = jwtTokenProvider.getId(token);
+        User user = jwtTokenProvider.getUser(token);
 
-        reviewService.writeReview(customerId, requestDto);
+        reviewService.writeReview(user.getId(), requestDto);
+
         return ResponseEntity.ok("리뷰 작성 완료");
 
     }

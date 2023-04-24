@@ -4,6 +4,7 @@ import com.zerobase.reservation.configuration.jwt.JwtTokenProvider;
 import com.zerobase.reservation.domain.entity.Reservation;
 import com.zerobase.reservation.dto.ReservationCreateRequestDto;
 import com.zerobase.reservation.dto.ReservationDto;
+import com.zerobase.reservation.dto.User;
 import com.zerobase.reservation.service.ReservationService;
 import com.zerobase.reservation.type.Role;
 import java.util.List;
@@ -45,20 +46,21 @@ public class ReservationController {
         @RequestBody ReservationCreateRequestDto requestDto
     ) {
 
-        String customerEmail = jwtTokenProvider.getEmail(token);
-
-        reservationService.makeReservation(customerEmail, restaurantId,
+        User user = jwtTokenProvider.getUser(token);
+        Reservation reservation = reservationService.makeReservation(user.getId(), restaurantId,
             requestDto.getReservationTime());
 
-        return ResponseEntity.ok("예약 완료");
+        return ResponseEntity.ok(reservation.getCustomer().getName() + "님, 예약을 확인 중입니다.");
     }
 
     // customer 예약 정보
     @GetMapping("/customers/reservations")
-    public ResponseEntity<List<ReservationDto>> getAllCustomerReservations(@RequestHeader(name = AUTH_TOKEN) String token) {
+    public ResponseEntity<List<ReservationDto>> getAllCustomerReservations(
+        @RequestHeader(name = AUTH_TOKEN) String token) {
 
-        List<Reservation> reservations = reservationService.getAllReservationByCustomerId(
-            jwtTokenProvider.getEmail(token));
+        User user = jwtTokenProvider.getUser(token);
+
+        List<Reservation> reservations = reservationService.getAllReservationByCustomerId(user.getId());
 
         return ResponseEntity.ok(
             reservations.stream()
@@ -69,7 +71,8 @@ public class ReservationController {
 
     // 특정 매장 모든 예약 정보(점장 용)
     @GetMapping("/restaurants/{restaurantId}/reservations")
-    public ResponseEntity<List<ReservationDto>> getAllReservations(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<ReservationDto>> getAllReservations(
+        @PathVariable Long restaurantId) {
 
         List<Reservation> reservations = reservationService.getAllReservation(restaurantId);
 
@@ -87,12 +90,11 @@ public class ReservationController {
         @RequestBody Long reservationId
     ) {
 
-        Long customerId = jwtTokenProvider.getId(token);
+        User user = jwtTokenProvider.getUser(token);
 
-        reservationService.cancelReservation(customerId, reservationId);
+        reservationService.cancelReservation(user.getId(), reservationId);
 
         return ResponseEntity.ok("예약 취소 완료");
-
     }
 
     // 예약 거절
@@ -102,15 +104,16 @@ public class ReservationController {
         @RequestParam Long reservationId
     ) {
 
-        if (jwtTokenProvider.getRole(token) != Role.OWNER) {
+        User user = jwtTokenProvider.getUser(token);
+
+        if (user.getRole() != Role.OWNER) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("점장만 접근이 가능합니다.");
         }
 
-        Long ownerId = jwtTokenProvider.getId(token);
-        reservationService.rejectReservation(ownerId, reservationId);
+        reservationService.rejectReservation(user.getId(), reservationId);
 
-        return ResponseEntity.ok("예약 거절");
+        return ResponseEntity.ok("예약이 거절되었습니다.");
     }
 
     // 예약 승인
@@ -120,15 +123,17 @@ public class ReservationController {
         @RequestParam Long reservationId
     ) {
 
-        if (jwtTokenProvider.getRole(token) != Role.OWNER) {
+        User user = jwtTokenProvider.getUser(token);
+
+        if (user.getRole() != Role.OWNER) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("점장만 접근이 가능합니다.");
         }
 
-        Long ownerId = jwtTokenProvider.getId(token);
-        reservationService.approveReservation(ownerId, reservationId);
+        Reservation reservation = reservationService.approveReservation(
+            user.getId(), reservationId);
 
-        return ResponseEntity.ok("예약 승인");
+        return ResponseEntity.ok("예약이 완료되었습니다. code : " + reservation.getCode());
     }
 
 

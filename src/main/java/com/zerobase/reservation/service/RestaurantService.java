@@ -24,10 +24,10 @@ public class RestaurantService {
 
     // 매장 등록
     public RestaurantCreateResponseDto addRestaurant(
-        String  ownerEmail,
+        Long  ownerId,
         RestaurantCreateRequestDto requestDto) {
 
-        Owner owner = findOwnerByEmail(ownerEmail);
+        Owner owner = findOwnerById(ownerId);
 
         // 점장이 파트너 가입 되어 있는지 확인
         if (!owner.isPartner()) {
@@ -80,8 +80,8 @@ public class RestaurantService {
 
     }
 
-    private Owner findOwnerByEmail(String ownerEmail) {
-        return ownerRepository.findByEmail(ownerEmail)
+    private Owner findOwnerById(Long ownerId) {
+        return ownerRepository.findById(ownerId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 

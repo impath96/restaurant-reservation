@@ -19,6 +19,7 @@ public class LogInController {
     private final CustomerService customerService;
     private final OwnerService ownerService;
 
+    // LogInReponse에 @Getter를 사용하지 않으면 HttpMediaTypeNotAcceptableException 발생
     @PostMapping("/customers")
     public ResponseEntity<LogInResponse> customerLogIn(@RequestBody LogInForm logInForm) {
         return ResponseEntity.ok(new LogInResponse(customerService.logIn(logInForm)));

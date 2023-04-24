@@ -5,6 +5,7 @@ import com.zerobase.reservation.dto.RestaurantCreateRequestDto;
 import com.zerobase.reservation.dto.RestaurantCreateResponseDto;
 import com.zerobase.reservation.dto.RestaurantDetailDto;
 import com.zerobase.reservation.dto.RestaurantDto;
+import com.zerobase.reservation.dto.User;
 import com.zerobase.reservation.exception.CustomException;
 import com.zerobase.reservation.exception.ErrorCode;
 import com.zerobase.reservation.service.RestaurantService;
@@ -37,12 +38,14 @@ public class RestaurantController {
         @RequestBody RestaurantCreateRequestDto requestDto
     ) {
 
+        User user = jwtTokenProvider.getUser(token);
+
         // 회원 권한 체크
-        if (!isOwnerRole(jwtTokenProvider.getRole(token))) {
+        if (!isOwnerRole(user.getRole())) {
             throw new CustomException(ErrorCode.USER_ROLE_NOT_OWNER);
         }
 
-        return restaurantService.addRestaurant(jwtTokenProvider.getEmail(token), requestDto);
+        return restaurantService.addRestaurant(user.getId(), requestDto);
     }
 
 

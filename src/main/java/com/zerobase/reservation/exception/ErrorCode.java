@@ -22,6 +22,7 @@ public enum ErrorCode {
     // RESERVATION
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
     RESERVATION_TIME_OVER(HttpStatus.BAD_REQUEST, "예약 방문 예정 시간을 초과했습니다."),
+    INVALID_RESERVATION_TIME(HttpStatus.BAD_REQUEST, "유효하지 않은 예약 시간입니다."),
     RESERVATION_NOT_WAITING_APPROVAL(HttpStatus.BAD_REQUEST, "예약 승인 상태가 아닙니다."),
     RESERVATION_NOT_COMPLETE(HttpStatus.BAD_REQUEST, "예약 완료 상태가 아닙니다.");
 

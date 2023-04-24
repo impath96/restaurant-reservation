@@ -1,5 +1,6 @@
 package com.zerobase.reservation.configuration.jwt;
 
+import com.zerobase.reservation.dto.User;
 import com.zerobase.reservation.type.Role;
 import com.zerobase.reservation.util.Aes256Utils;
 import io.jsonwebtoken.Claims;
@@ -39,30 +40,41 @@ public class JwtTokenProvider {
         return token;
     }
 
-    public String getEmail(String token) {
+    public User getUser(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 
-        String encryptedEmail = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-            .getSubject();
-
-        return Aes256Utils.decrypt(encryptedEmail);
-    }
-
-    public Long getId(String token) {
-        String id = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getId();
-
-        return Long.parseLong(Aes256Utils.decrypt(id));
-    }
-
-    public Role getRole(String token) {
-
-        String role  = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role");
-
-        if (role.equalsIgnoreCase("owner")) {
-            return Role.OWNER;
-        }else {
-            return Role.CUSTOMER;
-        }
+        return User.builder()
+            .id(Long.parseLong(Aes256Utils.decrypt(claims.getId())))
+            .email( Aes256Utils.decrypt(claims.getSubject()))
+            .role(Role.valueOfRole((String) claims.get("role")))
+            .build();
 
     }
+
+//    public String getEmail(String token) {
+//
+//        String encryptedEmail = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
+//            .getSubject();
+//
+//        return Aes256Utils.decrypt(encryptedEmail);
+//    }
+//
+//    public Long getId(String token) {
+//        String id = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getId();
+//
+//        return Long.parseLong(Aes256Utils.decrypt(id));
+//    }
+//
+//    public Role getRole(String token) {
+//
+//        String role  = (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role");
+//
+//        if (role.equalsIgnoreCase("owner")) {
+//            return Role.OWNER;
+//        }else {
+//            return Role.CUSTOMER;
+//        }
+//
+//    }
 
 }

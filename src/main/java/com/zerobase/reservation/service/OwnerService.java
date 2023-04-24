@@ -56,10 +56,10 @@ public class OwnerService {
     }
 
     @Transactional
-    public Owner registerPartner(String email) {
+    public Owner registerPartner(Long ownerId) {
 
         // 먼저 해당 토큰 유효성 검사 - filter 또는 Interceptor 에서 구현!!
-        Owner owner = ownerRepository.findByEmail(email)
+        Owner owner = ownerRepository.findById(ownerId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 이미 파트너 인 경우
